@@ -1,68 +1,10 @@
-import os
-from typing import Optional
 
-import chromadb
-import dotenv
-import together
-from pydantic import BaseModel
-
-dotenv.load_dotenv()
-TOGETHER_API_KEY = os.getenv("TOGETHER_API_KEY")
-if not TOGETHER_API_KEY:
-    raise ValueError("TOGETHER_API_KEY is not set")
-
-together.api_key = TOGETHER_API_KEY
-model_list = together.Models.list()
-model = "Qwen/Qwen1.5-72B"
+from extract import extract_person
 
 name = "Ahmed Bakr"
 msg = """Hey everyone! I’m a CS major at Minerva University. I’m looking for a team interested in one of the education and sustainability tracks. I have founded an Ed-Tech Startup which focused on the mental wellness sector and worked with many startups with crazy ideas in the education and sustainability fields so I’m in with any cool ideas in those tracks especially if it’s something with ML/AI.
 Here’s my LinkedIn to connect too:
 https://www.linkedin.com/in/a7medbakrr?"""
-
-
-class Person(BaseModel):
-    name: str
-    background: str
-    interests: str
-    school: Optional[str] = None
-    year: Optional[str] = None
-    major: Optional[str] = None
-
-
-def extract_person(test_name: str, test_msg: str) -> Person:
-    prompt = f"""
- Given the following intro message:
-Name: "{test_name}"
-Message: "{test_msg}"
-Please extract the following properties for this person.
-interface Response {{
-  // If a property is not known, it can be left out
-  school?: string; // eg. University of Michigan, University of Waterloo
-  name?: string; // eg. John Doe, Jane Smith
-  year?: string; // eg. Sophomore, Senior, Graduate
-  major?: string; // eg. Computer Science
-  background: string; // optimize for embedding search, remove punctuation, keep keywords, remove people's names, only keep relevant information. remove emojis.
-  interests: string; // optimize for embedding search: remove punctuation, keep keywords, remove other people's names, only keep relevant information
-}}
-Please return your answer in the form of a JSON object conforming to the Typescript interface definition ONLY. DO NOT change the format of the JSON object. DO NOT include any other information in your response.
-"""
-
-    generation = together.Complete.create(
-        max_tokens=256,
-        stop=["\n\n"],
-        temperature=0.5,
-        top_k=10,
-        prompt=prompt,
-        model=model
-    )
-
-    raw_json = generation['output']['choices'][0]['text']
-    print(raw_json)
-
-    return Person.model_validate_json(raw_json)
-
-
 res = extract_person(name, msg)
 print(res)
 
