@@ -363,3 +363,5 @@ pyrightconfig.json
 .ionide
 
 # End of https://www.toptal.com/developers/gitignore/api/python,node,macos,visualstudiocode
+
+tree-messages.json

@@ -12,7 +12,7 @@ if not TOGETHER_API_KEY:
 
 together.api_key = TOGETHER_API_KEY
 model_list = together.Models.list()
-model = "Qwen/Qwen1.5-72B"
+model = "mistralai/Mixtral-8x7B-Instruct-v0.1"
 
 
 class Person(BaseModel):
@@ -24,11 +24,11 @@ class Person(BaseModel):
     major: Optional[str] = None
 
 
-def extract_person(test_name: str, test_msg: str) -> Person:
+def extract_person(name: str, msg: str) -> Person:
     prompt = f"""Given the following intro message:
 
-Name: "{test_name}"
-Message: "{test_msg}"
+Name: "{name}"
+Message: "{msg}"
 Please extract the following properties for this person.
 interface Response {{
   // If a property is not known, it can be left out
@@ -56,4 +56,6 @@ Please return your answer in the form of a JSON object conforming to the Typescr
     # Extract the {} from the string
     raw_json = raw_json[raw_json.find("{"): raw_json.rfind("}") + 1]
 
-    return Person.model_validate_json(raw_json)
+    person = Person.model_validate_json(raw_json)
+    person.name = name
+    return person
