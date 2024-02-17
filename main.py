@@ -15,8 +15,8 @@ model = "Qwen/Qwen1.5-72B"
 
 # print([model["name"] for model in model_list])
 
-test_name = ""  # TODO:
-test_msg = ""  # TODO:
+test_name = ""
+test_msg = """"""
 
 prompt = f"""
  Given the following intro message:
@@ -33,10 +33,9 @@ interface Response {{
   name?: string; // eg. John Doe, Jane Smith
   year?: string; // eg. Sophomore, Senior, Graduate
   major?: string; // eg. Computer Science
-  background: string; // optimize for embedding search: remove punctuation, keep keywords, remove people's names, only keep relevant information
+  background: string; // optimize for embedding search, remove punctuation, keep keywords, remove people's names, only keep relevant information. remove emojis.
   interests: string; // optimize for embedding search: remove punctuation, keep keywords, remove other people's names, only keep relevant information
 }}
-
 
 Please return your answer in the form of a JSON object conforming to the Typescript interface definition ONLY. Do not output anything else.
 """
