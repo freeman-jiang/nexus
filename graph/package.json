@@ -1,0 +1,14 @@
+{
+  "sourceType": "module",
+  "dependencies": {
+    "browserify": "^17.0.0",
+    "config.pixel": "^2.0.0",
+    "esmify": "^2.1.1",
+    "ngraph.generators": "^20.1.0",
+    "ngraph.pixel": "^2.4.1",
+    "query-string": "^8.2.0"
+  },
+  "scripts": {
+    "start": "browserify index.js -p esmify > bundle.js"
+  }
+}
