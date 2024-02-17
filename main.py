@@ -1,4 +1,63 @@
+import os
+
 import chromadb
+import dotenv
+import together
+
+dotenv.load_dotenv()
+TOGETHER_API_KEY = os.getenv("TOGETHER_API_KEY")
+if not TOGETHER_API_KEY:
+    raise ValueError("TOGETHER_API_KEY is not set")
+
+together.api_key = TOGETHER_API_KEY
+model_list = together.Models.list()
+model = "Qwen/Qwen1.5-72B"
+
+# print([model["name"] for model in model_list])
+
+test_name = ""  # TODO:
+test_msg = ""  # TODO:
+
+prompt = f"""
+ Given the following intro message:
+
+Name: "{test_name}"
+Message: "{test_msg}"
+
+
+Please extract the following properties for this person.
+
+interface Response {{
+  // If a property is not known, it can be left out
+  school?: string; // eg. University of Michigan, University of Waterloo
+  name?: string; // eg. John Doe, Jane Smith
+  year?: string; // eg. Sophomore, Senior, Graduate
+  major?: string; // eg. Computer Science
+  background: string; // optimize for embedding search: remove punctuation, keep keywords, remove people's names, only keep relevant information
+  interests: string; // optimize for embedding search: remove punctuation, keep keywords, remove other people's names, only keep relevant information
+}}
+
+
+Please return your answer in the form of a JSON object conforming to the Typescript interface definition ONLY. Do not output anything else.
+"""
+
+print(prompt)
+
+generation = together.Complete.create(
+    max_tokens=256,
+    stop=["\n\n"],
+    temperature=0.5,
+    top_k=10,
+    prompt=prompt,
+    model=model
+)
+
+text = generation['output']['choices'][0]['text']
+print(text)
+
+
+exit(0)
+
 
 chroma_client = chromadb.Client()
 
