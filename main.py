@@ -97,3 +97,12 @@ for i, message in enumerate(tree_messages):
 # )
 
 # print(results)
+
+
+results = collection.query(
+    query_texts=[
+        "I'm a current senior at Berkeley studying CS. My main technical passions are computer vision, ML, AR/VR, but I'm excited about solving all types of problems. My most fluent languages are Python, Java, and C++. I have a good amount of experience with full stack development across a couple different frameworks."],
+    n_results=10
+)
+
+print(results)

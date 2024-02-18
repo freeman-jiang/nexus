@@ -1,6 +1,6 @@
 const nodes = [
   {
-    id: 1,
+    id: "1",
     data: {
       name: "John Doe",
       interests: ["AI", "Blockchain"],
@@ -8,7 +8,7 @@ const nodes = [
     },
   },
   {
-    id: 2,
+    id: "2",
     data: {
       name: "Jane Doe",
       interests: ["Backend"],
@@ -16,7 +16,7 @@ const nodes = [
     },
   },
   {
-    id: 3,
+    id: "3",
     data: {
       name: "James Doe",
       interests: ["iOS", "Frontend"],
@@ -24,7 +24,7 @@ const nodes = [
     },
   },
   {
-    id: 4,
+    id: "4",
     data: {
       name: "Jill Doe",
       interests: ["Design", "Entrepreneurship"],
@@ -32,7 +32,7 @@ const nodes = [
     },
   },
   {
-    id: 5,
+    id: "5",
     data: {
       name: "Jack Doe",
       interests: ["Data Science"],
@@ -40,7 +40,7 @@ const nodes = [
     },
   },
   {
-    id: 6,
+    id: "6",
     data: {
       name: "Jenny Doe",
       interests: ["Design", "Frontend"],
@@ -48,7 +48,7 @@ const nodes = [
     },
   },
   {
-    id: 7,
+    id: "7",
     data: {
       name: "Jared Doe",
       interests: ["Backend", "Blockchain"],
@@ -56,7 +56,7 @@ const nodes = [
     },
   },
   {
-    id: 8,
+    id: "8",
     data: {
       name: "Jasmine Doe",
       interests: ["iOS", "Data Science"],
@@ -64,7 +64,7 @@ const nodes = [
     },
   },
   {
-    id: 9,
+    id: "9",
     data: {
       name: "Jasper Doe",
       interests: ["AI", "Entrepreneurship"],
@@ -74,14 +74,14 @@ const nodes = [
 ];
 
 const links = [
-  { source: 1, target: 2 },
-  { source: 1, target: 3 },
-  { source: 1, target: 4 },
-  { source: 1, target: 5 },
-  { source: 1, target: 6 },
-  { source: 1, target: 7 },
-  { source: 1, target: 8 },
-  { source: 1, target: 9 },
+  { source: "1", target: "2" },
+  { source: "1", target: "3" },
+  { source: "1", target: "4" },
+  { source: "1", target: "5" },
+  { source: "1", target: "6" },
+  { source: "1", target: "7" },
+  { source: "1", target: "8" },
+  { source: "1", target: "9" },
 ];
 
 module.exports = {
