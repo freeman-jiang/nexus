@@ -259,7 +259,9 @@ function rightFooter() {
 
   const location = query.treehacks ? "index.html" : "index.html?treehacks=true";
 
-  footer.innerHTML += `<button onclick="window.location.href='${location}'" style="color:white;background:#201c1c;font-family:Geist;border:none;padding:12px;cursor:pointer;float:right;">Toggle graph</button>`;
+  footer.innerHTML += `<button onclick="window.location.href='${location}'" style="color:white;background:#201c1c;font-family:Geist;border:none;padding:12px;cursor:pointer;float:right;">${
+    query.treehacks ? "See all data" : "See TreeHacks data"
+  }</button>`;
   document.body.appendChild(footer);
 }
 
