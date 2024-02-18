@@ -17,6 +17,7 @@ print(collection)
 class NodeData(BaseModel):
     name: str
     interests: str
+    background: str
     school: str
 
 
@@ -45,6 +46,10 @@ for i, embedding in enumerate(results["embeddings"]):
     # Get the 5 nearest neighbors to the embedding
     self_id = results["ids"][i]
     self_name = results["metadatas"][i]["name"]
+    self_interests = results["metadatas"][i]["interests"] if "interests" in results["metadatas"][i] else ""
+    self_school = results["metadatas"][i]["school"] if "school" in results["metadatas"][i] else ""
+    self_background = results["metadatas"][i]["background"] if "background" in results["metadatas"][i] else ""
+
     query = collection.query(
         n_results=50,
         query_embeddings=[embedding],
@@ -69,8 +74,9 @@ for i, embedding in enumerate(results["embeddings"]):
         id=source_id,
         data=NodeData(
             name=name,
-            interests="",
-            school="",
+            interests=self_interests,
+            school=self_school,
+            background=self_background
         )
     )
     # Add the node to the list of nodes

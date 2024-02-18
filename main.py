@@ -52,10 +52,19 @@ for i, message in enumerate(tree_messages):
 
     # If person already exists in the database, skip
     ident = f"{name}_{i}"
-    # existing = collection.get(ids=[ident])
-    # if existing["ids"]:
-    #     print(f"Skipping {ident}, already exists.")
-    #     continue
+    existing = collection.get(ids=[ident], include=["metadatas"])
+    if existing["ids"]:
+        metadata = existing["metadatas"][0]
+        person = Person(
+            background=metadata['background'],
+            interests=metadata['interests'],
+            major=metadata['major'] if 'major' in metadata else "unknown",
+            name=metadata['name'] if 'name' in metadata else "unknown",
+            school=metadata['school'] if 'school' in metadata else "unknown"
+        )
+        all_extracted.append(person)
+        print(f"Skipping {ident}, already exists.")
+        continue
 
     # Extract the person
     person = extract_person(name, msg)
@@ -66,12 +75,14 @@ for i, message in enumerate(tree_messages):
 
     collection.upsert(
         ids=[ident],
-        documents=[person.background + " . Interests: " + person.interests],
+        documents=[person.background +
+                   " . Interests: " + person.interests],
         metadatas=[{"name": name, "school": str(person.school),
                    "interests": person.interests, "background": person.background}]
     )
 
-    print(f"\nEmbedded person {i}: {person.name} ({person.school})",)
+    print(
+        f"\nEmbedded person {i}: {person.name} ({person.school})",)
     print(person)
 
     time.sleep(1)

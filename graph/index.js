@@ -2,20 +2,20 @@ var createSettingsView = require("config.pixel");
 var query = require("query-string").parse(window.location.search.substring(1));
 var graph = getGraphFromQueryString(query);
 var renderGraph = require("ngraph.pixel");
-// var addCurrentNodeSettings = require("./nodeSettings.js");
+var addCurrentNodeSettings = require("./nodeSettings.js");
 
 var renderer = renderGraph(graph, {
   node: createNodeUI,
 });
-// var settingsView = createSettingsView(renderer);
-// var gui = settingsView.gui();
+var settingsView = createSettingsView(renderer);
+var gui = settingsView.gui();
 
-// var nodeSettings = addCurrentNodeSettings(gui, renderer);
+var nodeSettings = addCurrentNodeSettings(gui, renderer);
 
 renderer.on("nodehover", showNodeDetails);
 
 function showNodeDetails(node) {
-  // nodeSettings.setUI(nodeUI);
+  nodeSettings.setUI(nodeUI);
   if (!node) return;
 
   graph.forEachNode(function (node) {
@@ -87,7 +87,17 @@ function showNodePanel(node) {
   panel.id = "nodePanel";
   panel.innerHTML = "<h1>" + node.data.name + "</h1>";
   panel.innerHTML += "<h2>" + node.data.school + "</h2>";
-  panel.innerHTML += "<p>" + node.data.interests + "</p>";
+  if (node.data.interests) {
+    panel.innerHTML += `<p>Interests: ${node.data.interests}</p>`;
+  }
+
+  if (node.data.background) {
+    panel.innerHTML += `<p>Background: ${node.data.background}</p>`;
+  }
+  if (graph.getLinks(node.id)) {
+    panel.innerHTML += `<p>Connections: ${graph.getLinks(node.id).length}</p>`;
+  }
+
   document.body.appendChild(panel);
 }
 

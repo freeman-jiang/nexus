@@ -35,7 +35,7 @@ interface Response {{
   interests: string; // optimize for embedding search: remove punctuation, keep keywords, remove other people's names, only keep relevant information
 }}
 
-Please return your answer in the form of a JSON object conforming to the Typescript interface definition ONLY. DO NOT change the format of the JSON object. DO NOT include any other information in your response. Your response:
+Please return your answer in the form of a JSON object conforming to the Typescript interface definition ONLY. DO NOT change the format of the JSON object. Make sure to include school, name, major, background, interests. DO NOT include any other information in your response. DO NOT include links. Your response:
 """
 
     for _ in range(5):  # Retry up to 5 times
