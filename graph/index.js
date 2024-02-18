@@ -12,7 +12,7 @@ var renderer = renderGraph(graph, {
 
 // var nodeSettings = addCurrentNodeSettings(gui, renderer);
 
-renderer.on("nodeclick", showNodeDetails);
+renderer.on("nodehover", showNodeDetails);
 
 function showNodeDetails(node) {
   // nodeSettings.setUI(nodeUI);
