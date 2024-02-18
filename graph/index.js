@@ -1,27 +1,17 @@
 const NODE_COLOR = 0x4fb389;
 const NODE_SIZE = 15;
+const NODE_HOVER_COLOR = 0xffe213;
+const NODE_CONNECTION_COLOR = 0xff0000;
 const LINK_START_COLOR = 0x732196;
 const LINK_END_COLOR = 0x5f5858;
+const LINK_CONNECTION_START_COLOR = 0xffffff;
+const LINK_CONNECTION_END_COLOR = 0x333333;
 const SPRING_LENGTH = 110;
 const SPRING_COEFF = 0.00111;
 const GRAVITY = -42;
 const THETA = 0.8;
 const DRAG_COEFF = 0.154;
 const TIME_STEP = 1;
-
-function createNodeUI() {
-  return {
-    color: NODE_COLOR,
-    size: NODE_SIZE,
-  };
-}
-
-function createLinkUI() {
-  return {
-    fromColor: LINK_START_COLOR,
-    toColor: LINK_END_COLOR,
-  };
-}
 
 var createSettingsView = require("config.pixel");
 var query = require("query-string").parse(window.location.search.substring(1));
@@ -30,8 +20,18 @@ var renderGraph = require("ngraph.pixel");
 var addCurrentNodeSettings = require("./nodeSettings.js");
 
 var renderer = renderGraph(graph, {
-  node: createNodeUI,
-  link: createLinkUI,
+  node: () => {
+    return {
+      color: NODE_COLOR,
+      size: NODE_SIZE,
+    };
+  },
+  link: () => {
+    return {
+      fromColor: LINK_START_COLOR,
+      toColor: LINK_END_COLOR,
+    };
+  },
 });
 
 var simulator = renderer.layout().simulator;
@@ -56,12 +56,23 @@ function showNodeDetails(node) {
 
   graph.forEachNode(function (node) {
     var nodeUI = renderer.getNode(node.id);
-    nodeUI.color = 0x4fb389;
-    nodeUI.size = 20;
+    nodeUI.color = NODE_COLOR;
+  });
+  graph.forEachLink(function (link) {
+    var linkUI = renderer.getLink(link.id);
+    linkUI.fromColor = LINK_START_COLOR;
+    linkUI.toColor = LINK_END_COLOR;
   });
   var nodeUI = renderer.getNode(node.id);
-  nodeUI.color = 0xffe213;
-  nodeUI.size = 30;
+  nodeUI.color = NODE_HOVER_COLOR;
+  graph.getLinks(node.id).forEach(function (link) {
+    var toNode = link.toId === node.id ? link.fromId : link.toId;
+    var toNodeUI = renderer.getNode(toNode);
+    toNodeUI.color = NODE_CONNECTION_COLOR;
+    var linkUI = renderer.getLink(link.id);
+    linkUI.fromColor = LINK_CONNECTION_START_COLOR;
+    linkUI.toColor = LINK_CONNECTION_END_COLOR;
+  });
   showNodePanel(node);
 }
 
