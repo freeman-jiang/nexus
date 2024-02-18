@@ -15,8 +15,16 @@ var renderer = renderGraph(graph, {
 renderer.on("nodeclick", showNodeDetails);
 
 function showNodeDetails(node) {
-  // var nodeUI = renderer.getNode(node.id);
   // nodeSettings.setUI(nodeUI);
+
+  graph.forEachNode(function (node) {
+    var nodeUI = renderer.getNode(node.id);
+    nodeUI.color = 0x4fb389;
+    nodeUI.size = 20;
+  });
+  var nodeUI = renderer.getNode(node.id);
+  nodeUI.color = 0xffe213;
+  nodeUI.size = 30;
   showNodePanel(node);
 }
 
@@ -54,7 +62,7 @@ function populateGraph() {
 
 function createNodeUI(node) {
   return {
-    color: 0xff00ff,
+    color: 0x4fb389,
     size: 20,
   };
 }
