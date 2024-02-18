@@ -2,21 +2,21 @@ var createSettingsView = require("config.pixel");
 var query = require("query-string").parse(window.location.search.substring(1));
 var graph = getGraphFromQueryString(query);
 var renderGraph = require("ngraph.pixel");
-var addCurrentNodeSettings = require("./nodeSettings.js");
+// var addCurrentNodeSettings = require("./nodeSettings.js");
 
 var renderer = renderGraph(graph, {
   node: createNodeUI,
 });
-var settingsView = createSettingsView(renderer);
-var gui = settingsView.gui();
+// var settingsView = createSettingsView(renderer);
+// var gui = settingsView.gui();
 
-var nodeSettings = addCurrentNodeSettings(gui, renderer);
+// var nodeSettings = addCurrentNodeSettings(gui, renderer);
 
 renderer.on("nodeclick", showNodeDetails);
 
 function showNodeDetails(node) {
-  var nodeUI = renderer.getNode(node.id);
-  nodeSettings.setUI(nodeUI);
+  // var nodeUI = renderer.getNode(node.id);
+  // nodeSettings.setUI(nodeUI);
   showNodePanel(node);
 }
 
@@ -60,5 +60,21 @@ function createNodeUI(node) {
 }
 
 function showNodePanel(node) {
-  console.log("html", document.body);
+  if (document.getElementById("nodePanel")) {
+    document.getElementById("nodePanel").remove();
+  }
+  var panel = document.createElement("div");
+  panel.style.position = "absolute";
+  panel.style.top = "0";
+  panel.style.left = "0";
+  panel.style.color = "white";
+  panel.style.padding = "10px";
+  panel.style.marginLeft = "20px";
+  panel.style.width = "300px";
+  panel.style.fontFamily = "Lucida Grande, sans-serif";
+  panel.id = "nodePanel";
+  panel.innerHTML = "<h1>" + node.data.name + "</h1>";
+  panel.innerHTML += "<h2>" + node.data.school + "</h2>";
+  panel.innerHTML += "<p>" + node.data.interests.join(", ") + "</p>";
+  document.body.appendChild(panel);
 }
