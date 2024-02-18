@@ -145,7 +145,7 @@ function showNodePanel(node) {
   panel.style.padding = "10px";
   panel.style.marginLeft = "20px";
   panel.style.width = "300px";
-  panel.style.fontFamily = "Lucida Grande, sans-serif";
+  panel.style.fontFamily = "Geist, sans-serif";
   panel.style.maxHeight = "65%";
   panel.style.overflowY = "auto";
   panel.id = "nodePanel";
@@ -156,11 +156,11 @@ function showNodePanel(node) {
   }
 
   if (node.data.interests) {
-    panel.innerHTML += `<p>Interests: ${node.data.interests}</p>`;
+    panel.innerHTML += `<p><strong>Interests</strong>: ${node.data.interests}</p>`;
   }
 
   if (node.data.background) {
-    panel.innerHTML += `<p>Background: ${node.data.background}</p>`;
+    panel.innerHTML += `<p><strong>Background</strong>: ${node.data.background}</p>`;
   }
   if (graph.getLinks(node.id)) {
     panel.innerHTML += `<p>Potential connections: ${
@@ -194,7 +194,7 @@ function showInitialNodePanel() {
   panel.style.padding = "10px";
   panel.style.marginLeft = "20px";
   panel.style.width = "300px";
-  panel.style.fontFamily = "Lucida Grande, sans-serif";
+  panel.style.fontFamily = "Geist, sans-serif";
   panel.id = "nodePanel";
   panel.innerHTML = "<h2>Hover over a node to see more details</h2>";
   document.body.appendChild(panel);
@@ -208,7 +208,7 @@ function leftInstructions() {
   footer.style.color = "grey";
   footer.style.padding = "10px";
   footer.style.marginLeft = "20px";
-  footer.style.fontFamily = "Lucida Grande, sans-serif";
+  footer.style.fontFamily = "Geist, sans-serif";
   footer.style.fontSize = "11px";
   footer.innerHTML =
     "<p>W: Move forward</p>" +
@@ -228,7 +228,7 @@ function rightInstructions() {
   footer.style.color = "grey";
   footer.style.padding = "10px";
   footer.style.marginLeft = "20px";
-  footer.style.fontFamily = "Lucida Grande, sans-serif";
+  footer.style.fontFamily = "Geist, sans-serif";
   footer.style.fontSize = "11px";
   footer.innerHTML =
     "<p>Q: Turn clockwise</p>" +
@@ -253,14 +253,14 @@ function rightFooter() {
   footer.style.color = "grey";
   footer.style.padding = "10px";
   footer.style.marginRight = "20px";
-  footer.style.fontFamily = "Lucida Grande, sans-serif";
+  footer.style.fontFamily = "Geist, sans-serif";
   footer.style.fontSize = "11px";
   footer.innerHTML =
     "<p>Made with love at TreeHacks&nbsp; <a target='_blank' rel='noopener noreferrer' href='https://treehacks.com'><img src='favicon.ico' width='15px' height='15px'></a></p>";
 
   const location = query.treehacks ? "index.html" : "index.html?treehacks=true";
 
-  footer.innerHTML += `<button onclick="window.location.href='${location}'">Toggle graph</button>`;
+  footer.innerHTML += `<button onclick="window.location.href='${location}'" style="color:white;background:#201c1c;font-family:Geist;border:none;padding:12px;cursor:pointer;float:right;">Toggle graph</button>`;
   document.body.appendChild(footer);
 }
 
@@ -324,7 +324,7 @@ function showSearchBar() {
   searchBarContainer.style.padding = "20px";
   searchBarContainer.style.width = "300px";
   searchBarContainer.style.boxSizing = "border-box";
-  searchBarContainer.style.fontFamily = "'Lucida Grande', sans-serif";
+  searchBarContainer.style.fontFamily = "'Geist', sans-serif";
   searchBarContainer.style.display = "flex";
   searchBarContainer.style.flexDirection = "column";
   searchBarContainer.style.gap = "10px";
@@ -333,18 +333,23 @@ function showSearchBar() {
   input.style.padding = "10px";
   input.style.borderRadius = "8px";
   input.style.border = "none";
-  input.style.background = "rgba(255, 255, 255, 0.2)";
+  input.style.background = "rgba(0, 0, 0, 0.4)";
   input.style.borderRadius = "12px";
   input.style.border = "1px solid rgba(255, 255, 255, 0.18)";
   input.style.backdropFilter = "blur(5px)";
+  input.style.fontFamily = "'Geist', sans-serif";
+  input.style.outlineColor = "rgba(255, 255, 255, 0.1)";
+  input.style.color = "white";
 
   var button = document.createElement("button");
+  button.style.fontFamily = "'Geist', sans-serif";
   button.textContent = "Search";
+  button.style.color = "white";
   button.style.padding = "10px";
   button.style.borderRadius = "8px";
   button.style.border = "none";
   button.style.cursor = "pointer";
-  button.style.background = "rgba(255, 255, 255, 0.4)";
+  button.style.background = "rgba(0, 0, 0, 0.4)";
 
   var resultsContainer = document.createElement("div");
   resultsContainer.id = "resultsContainer";
@@ -374,6 +379,7 @@ function showSearchBar() {
         var result = document.createElement("div");
         result.innerHTML = `<strong>${node.data.name}</strong><br>${node.data.school}<br>`;
         resultsContainer.appendChild(result);
+        result.style.cursor = "pointer";
 
         result.addEventListener("click", function () {
           var nodePosition = layout.getNodePosition
