@@ -45,7 +45,7 @@ simulator.gravity(GRAVITY);
 simulator.theta(THETA);
 simulator.dragCoeff(DRAG_COEFF);
 simulator.timeStep(TIME_STEP);
-// renderer.focus();
+renderer.focus();
 
 var settingsView = createSettingsView(renderer);
 var gui = settingsView.gui();
@@ -53,11 +53,32 @@ var gui = settingsView.gui();
 var nodeSettings = addCurrentNodeSettings(gui, renderer);
 
 renderer.on("nodehover", showNodeDetails);
+renderer.on("nodeclick", resetNodeDetails);
 
 function showNodeDetails(node) {
-  nodeSettings.setUI(node);
   if (!node) return;
 
+  nodeSettings.setUI(node);
+  resetNodeDetails();
+
+  var nodeUI = renderer.getNode(node.id);
+  nodeUI.color = NODE_HOVER_COLOR;
+
+  if (graph.getLinks(node.id)) {
+    graph.getLinks(node.id).forEach(function (link) {
+      var toNode = link.toId === node.id ? link.fromId : link.toId;
+      var toNodeUI = renderer.getNode(toNode);
+      toNodeUI.color = NODE_CONNECTION_COLOR;
+
+      var linkUI = renderer.getLink(link.id);
+      linkUI.fromColor = LINK_CONNECTION_FROM_COLOR;
+      linkUI.toColor = LINK_CONNECTION_TO_COLOR;
+    });
+  }
+  showNodePanel(node);
+}
+
+function resetNodeDetails() {
   graph.forEachNode(function (node) {
     var nodeUI = renderer.getNode(node.id);
     nodeUI.color = NODE_COLOR;
@@ -67,17 +88,12 @@ function showNodeDetails(node) {
     linkUI.fromColor = LINK_FROM_COLOR;
     linkUI.toColor = LINK_TO_COLOR;
   });
-  var nodeUI = renderer.getNode(node.id);
-  nodeUI.color = NODE_HOVER_COLOR;
-  graph.getLinks(node.id).forEach(function (link) {
-    var toNode = link.toId === node.id ? link.fromId : link.toId;
-    var toNodeUI = renderer.getNode(toNode);
-    toNodeUI.color = NODE_CONNECTION_COLOR;
-    var linkUI = renderer.getLink(link.id);
-    linkUI.fromColor = LINK_CONNECTION_FROM_COLOR;
-    linkUI.toColor = LINK_CONNECTION_TO_COLOR;
-  });
-  showNodePanel(node);
+
+  if (document.getElementById("nodePanel")) {
+    document.getElementById("nodePanel").remove();
+  }
+
+  showInitialNodePanel();
 }
 
 function getGraphFromQueryString(query) {
@@ -324,19 +340,21 @@ function showSearchBar() {
 
   button.addEventListener("click", function () {
     resultsContainer.innerHTML = "";
-  
+
     var query = input.value ? input.value : "Krish";
     var matchingIndexes = searchByNameOrSchool(nodes, query);
-  
+
     matchingIndexes.forEach((index) => {
       var node = nodes.find((node) => node.id === index);
       if (node) {
         var result = document.createElement("div");
         result.innerHTML = `<strong>${node.data.name}</strong><br>${node.data.interests}`;
         resultsContainer.appendChild(result);
-  
+
         result.addEventListener("click", function () {
-          var nodePosition = layout.getNodePosition ? layout.getNodePosition(node.id) : { x: 0, y: 0, z: 0 };
+          var nodePosition = layout.getNodePosition
+            ? layout.getNodePosition(node.id)
+            : { x: 0, y: 0, z: 0 };
           focusOnNode(node.id);
           showNodeDetails(node);
           console.log(renderer.camera());
@@ -344,11 +362,11 @@ function showSearchBar() {
         });
       }
     });
-  
+
     if (matchingIndexes.length === 0) {
       resultsContainer.innerHTML = "<div>No results found</div>";
     }
-  });  
+  });
 }
 
 function intersect(from, to, r) {
