@@ -40,7 +40,7 @@ collection = chroma_client.get_or_create_collection(
 
 
 # Load a JSON array from tree-messages.json
-with open("tree-messages.json", "r") as f:
+with open("messages-htn-calhacks.json", "r") as f:
     tree_messages = json.loads(f.read())
 
 all_extracted: list[Person] = []
@@ -81,7 +81,7 @@ for i, message in enumerate(tree_messages):
         documents=[person.background +
                    " . Interests: " + person.interests],
         metadatas=[{"name": name, "school": str(person.school),
-                   "interests": person.interests, "background": person.background}]
+                   "interests": person.interests, "background": person.background, "major": person.major}]
     )
 
     print(

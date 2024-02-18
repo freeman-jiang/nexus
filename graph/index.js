@@ -116,6 +116,10 @@ function showNodePanel(node) {
   panel.id = "nodePanel";
   panel.innerHTML = "<h1>" + node.data.name + "</h1>";
   panel.innerHTML += "<h2>" + node.data.school + "</h2>";
+  if (node.data.major) {
+    panel.innerHTML += "<h3>Major: " + node.data.major + "</h3>";
+  }
+
   if (node.data.interests) {
     panel.innerHTML += `<p>Interests: ${node.data.interests}</p>`;
   }

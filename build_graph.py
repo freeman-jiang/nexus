@@ -19,6 +19,7 @@ class NodeData(BaseModel):
     interests: str
     background: str
     school: str
+    major: str
 
 
 class Node(BaseModel):
@@ -49,6 +50,7 @@ for i, embedding in enumerate(results["embeddings"]):
     self_interests = results["metadatas"][i]["interests"] if "interests" in results["metadatas"][i] else ""
     self_school = results["metadatas"][i]["school"] if "school" in results["metadatas"][i] else ""
     self_background = results["metadatas"][i]["background"] if "background" in results["metadatas"][i] else ""
+    self_major = results["metadatas"][i]["major"] if "major" in results["metadatas"][i] else ""
 
     query = collection.query(
         n_results=50,
@@ -76,7 +78,8 @@ for i, embedding in enumerate(results["embeddings"]):
             name=name,
             interests=self_interests,
             school=self_school,
-            background=self_background
+            background=self_background,
+            major=self_major
         )
     )
     # Add the node to the list of nodes
