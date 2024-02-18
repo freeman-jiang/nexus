@@ -15,6 +15,9 @@ const TIME_STEP = 3;
 
 var createSettingsView = require("config.pixel");
 var query = require("query-string").parse(window.location.search.substring(1));
+const json = query.treehacks
+  ? require("./treehacksData.json")
+  : require("./graphData.json");
 var graph = getGraphFromQueryString(query);
 var renderGraph = require("ngraph.pixel");
 // var addCurrentNodeSettings = require("./nodeSettings.js");
@@ -114,10 +117,6 @@ function getNumber(string, defaultValue) {
 function populateGraph() {
   var createGraph = require("ngraph.graph");
   var g = createGraph();
-
-  const json = query.treehacks
-    ? require("../treehacksData.json")
-    : require("../graphData.json");
 
   // Extract the "nodes" and "links" from the JSON file
   var nodes = json.nodes;
@@ -309,7 +308,6 @@ function showSearchBar() {
     document.getElementById("searchBarContainer").remove();
   }
 
-  const json = require("../graphData.json");
   var nodes = json.nodes;
 
   var searchBarContainer = document.createElement("div");
