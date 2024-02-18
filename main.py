@@ -9,7 +9,7 @@ import together
 
 import chromadb
 from chromadb import Documents, EmbeddingFunction, Embeddings
-from extract import extract_person
+from extract import Person, extract_person
 
 dotenv.load_dotenv()
 TOGETHER_API_KEY = os.getenv("TOGETHER_API_KEY")
@@ -43,6 +43,7 @@ collection = chroma_client.get_or_create_collection(
 with open("tree-messages.json", "r") as f:
     tree_messages = json.loads(f.read())
 
+all_extracted: list[Person] = []
 
 for i, message in enumerate(tree_messages):
     # Extract the name and message from the message
@@ -58,21 +59,27 @@ for i, message in enumerate(tree_messages):
 
     # Extract the person
     person = extract_person(name, msg)
+    all_extracted.append(person)
 
     # sleep every 5 iterations
-    time.sleep(1.1)
+    time.sleep(1)
 
     collection.upsert(
         ids=[ident],
-        documents=[person.background],
+        documents=[person.background + " . Interests: " + person.interests],
         metadatas=[{"name": name, "school": str(person.school),
-                   "interests": person.interests}]
+                   "interests": person.interests, "background": person.background}]
     )
 
-    print(f"\nEmbedded person: {person.name} ({person.school})",)
+    print(f"\nEmbedded person {i}: {person.name} ({person.school})",)
+    print(person)
 
-    time.sleep(1.1)
+    time.sleep(1)
 
+# Write the extracted people to a file
+with open("people.json", "w") as f:
+    f.write(json.dumps([person.model_dump()
+            for person in all_extracted], indent=2))
 
 #     print(person)
 

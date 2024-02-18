@@ -11,12 +11,11 @@ model = "mistralai/Mixtral-8x7B-Instruct-v0.1"
 
 
 class Person(BaseModel):
-    name: str
+    school: str
+    major: str
     background: str
+    name: str
     interests: str
-    school: Optional[str] = None
-    year: Optional[str] = None
-    major: Optional[str] = None
 
 
 @retry(wait=wait_random_exponential(min=1, max=60), stop=stop_after_attempt(5))
@@ -28,11 +27,10 @@ Name: "{name}"
 Message: "{msg}"
 Please extract the following properties for this person.
 interface Response {{
-  // If a property is not known, it can be left out
-  school?: string; // eg. University of Michigan, University of Waterloo
-  name?: string; // eg. John Doe, Jane Smith
-  year?: string; // eg. Sophomore, Senior, Graduate
-  major?: string; // eg. Computer Science
+  // If a property is not known, put unknown
+  school: string; // eg. University of Michigan, University of Waterloo
+  name: string; // eg. John Doe, Jane Smith
+  major: string; // eg. Computer Science
   background: string; // optimize for embedding search, remove punctuation, keep keywords, remove people's names, only keep relevant information. remove emojis.
   interests: string; // optimize for embedding search: remove punctuation, keep keywords, remove other people's names, only keep relevant information
 }}
