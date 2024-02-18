@@ -1,0 +1,5 @@
+
+.env.local
+
+**/tree-messages.json
+**/tree-messages.jsonl
