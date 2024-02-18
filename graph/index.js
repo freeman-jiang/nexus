@@ -16,6 +16,7 @@ renderer.on("nodehover", showNodeDetails);
 
 function showNodeDetails(node) {
   // nodeSettings.setUI(nodeUI);
+  if (!node) return;
 
   graph.forEachNode(function (node) {
     var nodeUI = renderer.getNode(node.id);
@@ -86,7 +87,7 @@ function showNodePanel(node) {
   panel.id = "nodePanel";
   panel.innerHTML = "<h1>" + node.data.name + "</h1>";
   panel.innerHTML += "<h2>" + node.data.school + "</h2>";
-  panel.innerHTML += "<p>" + node.data.interests.join(", ") + "</p>";
+  panel.innerHTML += "<p>" + node.data.interests + "</p>";
   document.body.appendChild(panel);
 }
 
