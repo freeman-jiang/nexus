@@ -4,7 +4,9 @@ var graph = getGraphFromQueryString(query);
 var renderGraph = require("ngraph.pixel");
 var addCurrentNodeSettings = require("./nodeSettings.js");
 
-var renderer = renderGraph(graph);
+var renderer = renderGraph(graph, {
+  node: createNodeUI,
+});
 var settingsView = createSettingsView(renderer);
 var gui = settingsView.gui();
 
@@ -15,6 +17,7 @@ renderer.on("nodeclick", showNodeDetails);
 function showNodeDetails(node) {
   var nodeUI = renderer.getNode(node.id);
   nodeSettings.setUI(nodeUI);
+  showNodePanel(node);
 }
 
 function getGraphFromQueryString(query) {
@@ -47,4 +50,15 @@ function populateGraph() {
   });
 
   return g;
+}
+
+function createNodeUI(node) {
+  return {
+    color: 0xff00ff,
+    size: 20,
+  };
+}
+
+function showNodePanel(node) {
+  console.log("html", document.body);
 }
