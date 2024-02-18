@@ -17,7 +17,7 @@ var createSettingsView = require("config.pixel");
 var query = require("query-string").parse(window.location.search.substring(1));
 var graph = getGraphFromQueryString(query);
 var renderGraph = require("ngraph.pixel");
-var addCurrentNodeSettings = require("./nodeSettings.js");
+// var addCurrentNodeSettings = require("./nodeSettings.js");
 var THREE = require("three");
 var createLayout = require("pixel.layout");
 
@@ -47,10 +47,10 @@ simulator.dragCoeff(DRAG_COEFF);
 simulator.timeStep(TIME_STEP);
 renderer.focus();
 
-var settingsView = createSettingsView(renderer);
-var gui = settingsView.gui();
+// var settingsView = createSettingsView(renderer);
+// var gui = settingsView.gui();
 
-var nodeSettings = addCurrentNodeSettings(gui, renderer);
+// var nodeSettings = addCurrentNodeSettings(gui, renderer);
 
 renderer.on("nodehover", showNodeDetails);
 renderer.on("nodeclick", resetNodeDetails);
@@ -58,7 +58,7 @@ renderer.on("nodeclick", resetNodeDetails);
 function showNodeDetails(node) {
   if (!node) return;
 
-  nodeSettings.setUI(node);
+  // nodeSettings.setUI(node);
   resetNodeDetails();
 
   var nodeUI = renderer.getNode(node.id);
