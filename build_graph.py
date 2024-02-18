@@ -14,7 +14,7 @@ print(collection)
 # Define the model for the nested "data" part
 
 N_RESULTS = 50
-DISTANCE_THRESHOLD = 7
+DISTANCE_THRESHOLD = 8
 
 
 class NodeData(BaseModel):
