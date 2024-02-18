@@ -243,6 +243,7 @@ function rightFooter() {
   document.body.appendChild(footer);
 }
 
+
 function searchByNameOrSchool(nodes, query) {
   const resultIds = nodes
     .filter((node) => {
@@ -281,9 +282,6 @@ function updateNodePosition(nodeId) {
 
 function focusOnNode(nodeId) {
   var position = updateNodePosition(nodeId);
-  if (position) {
-    flyTo(renderer.camera(), position, 1);
-  }
 }
 
 function showSearchBar() {
@@ -346,21 +344,19 @@ function showSearchBar() {
 
   button.addEventListener("click", function () {
     resultsContainer.innerHTML = "";
-
-    var query = input.value ? input.value : "Krish";
+  
+    var query = input.value ? input.value : "Matthew";
     var matchingIndexes = searchByNameOrSchool(nodes, query);
-
+  
     matchingIndexes.forEach((index) => {
       var node = nodes.find((node) => node.id === index);
       if (node) {
         var result = document.createElement("div");
-        result.innerHTML = `<strong>${node.data.name}</strong><br>${node.data.interests}`;
+        result.innerHTML = `<strong>${node.data.name}</strong><br>${node.data.school}<br>`;
         resultsContainer.appendChild(result);
-
+  
         result.addEventListener("click", function () {
-          var nodePosition = layout.getNodePosition
-            ? layout.getNodePosition(node.id)
-            : { x: 0, y: 0, z: 0 };
+          var nodePosition = layout.getNodePosition ? layout.getNodePosition(node.id) : { x: 0, y: 0, z: 0 };
           focusOnNode(node.id);
           showNodeDetails(node);
           console.log(renderer.camera());
@@ -368,11 +364,11 @@ function showSearchBar() {
         });
       }
     });
-
+  
     if (matchingIndexes.length === 0) {
       resultsContainer.innerHTML = "<div>No results found</div>";
     }
-  });
+  });  
 }
 
 function intersect(from, to, r) {
@@ -389,26 +385,32 @@ function intersect(from, to, r) {
     z: r * Math.cos(teta) + to.z,
   };
 }
-function flyTo(camera, targetPosition, distance) {
-  // Assuming 'distance' is a small value to adjust the camera's position slightly away from the target
 
-  // Calculate a direction vector from the camera to the target position
-  var direction = new THREE.Vector3()
-    .subVectors(targetPosition, camera.position)
-    .normalize();
 
-  // Calculate a new position for the camera along the direction vector, using the specified distance
-  var newPosition = new THREE.Vector3().addVectors(
-    targetPosition,
-    direction.multiplyScalar(-distance)
-  );
-  renderer.stable(true);
-  // Set the camera to the new position
-  camera.position.set(newPosition.x, newPosition.y, newPosition.z);
+function flyTo(camera, to, radius) {
+  // if (!to || to.x === undefined || to.y === undefined || to.z === undefined) {
+  //   console.error('Invalid target position:', to);
+  //   return; // Exit if 'to' is not a valid object
+  // }
 
-  // Make the camera look at the target position
-  camera.lookAt(targetPosition);
+  // var from = {
+  //   x: camera.position.x,
+  //   y: camera.position.y,
+  //   z: camera.position.z,
+  // };
+
+  // var cameraOffset = radius / Math.tan(Math.PI / 180.0 * camera.fov * 0.5);
+  // var cameraEndPos = intersect(from, to, cameraOffset);
+
+  // if (!cameraEndPos) {
+  //   console.error('Failed to calculate camera end position.');
+  //   return; // Exit if 'cameraEndPos' is undefined
+  // }
+
+  camera.position.set(0, 0, 0);
+  // camera.lookAt(new THREE.Vector3(to.x, to.y, to.z));
 }
+
 
 showSearchBar();
 
