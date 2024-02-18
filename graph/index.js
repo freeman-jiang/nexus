@@ -146,6 +146,8 @@ function showNodePanel(node) {
   panel.style.marginLeft = "20px";
   panel.style.width = "300px";
   panel.style.fontFamily = "Lucida Grande, sans-serif";
+  panel.style.maxHeight = "65%";
+  panel.style.overflowY = "auto";
   panel.id = "nodePanel";
   panel.innerHTML = "<h1>" + node.data.name + "</h1>";
   panel.innerHTML += "<h2>" + node.data.school + "</h2>";
@@ -161,7 +163,23 @@ function showNodePanel(node) {
     panel.innerHTML += `<p>Background: ${node.data.background}</p>`;
   }
   if (graph.getLinks(node.id)) {
-    panel.innerHTML += `<p>Connections: ${graph.getLinks(node.id).length}</p>`;
+    panel.innerHTML += `<p>Potential connections: ${
+      graph.getLinks(node.id).length
+    }</p>`;
+    panel.innerHTML += `<h3>Top match:</h3>`;
+    var topMatch = document.createElement("div");
+    topMatch.style.display = "flex";
+    topMatch.style.flexDirection = "column";
+    topMatch.style.gap = "5px";
+    topMatch.style.marginBottom = "10px";
+    var link = graph.getLinks(node.id)[0];
+    var toNode = link.toId === node.id ? link.fromId : link.toId;
+    var toNodeData = graph.getNode(toNode).data;
+    topMatch.innerHTML = `<strong>${toNodeData.name}</strong>`;
+    topMatch.addEventListener("click", function () {
+      showNodeDetails(graph.getNode(toNode));
+    });
+    panel.appendChild(topMatch);
   }
 
   document.body.appendChild(panel);
@@ -191,6 +209,7 @@ function leftInstructions() {
   footer.style.padding = "10px";
   footer.style.marginLeft = "20px";
   footer.style.fontFamily = "Lucida Grande, sans-serif";
+  footer.style.fontSize = "11px";
   footer.innerHTML =
     "<p>W: Move forward</p>" +
     "<p>S: Move backward</p>" +
@@ -205,11 +224,12 @@ function rightInstructions() {
   var footer = document.createElement("div");
   footer.style.position = "absolute";
   footer.style.bottom = "0";
-  footer.style.left = "200px";
+  footer.style.left = "120px";
   footer.style.color = "grey";
   footer.style.padding = "10px";
   footer.style.marginLeft = "20px";
   footer.style.fontFamily = "Lucida Grande, sans-serif";
+  footer.style.fontSize = "11px";
   footer.innerHTML =
     "<p>Q: Turn clockwise</p>" +
     "<p>E: Turn counter-clockwise</p>" +
@@ -234,6 +254,7 @@ function rightFooter() {
   footer.style.padding = "10px";
   footer.style.marginRight = "20px";
   footer.style.fontFamily = "Lucida Grande, sans-serif";
+  footer.style.fontSize = "11px";
   footer.innerHTML =
     "<p>Made with love at TreeHacks&nbsp; <a target='_blank' rel='noopener noreferrer' href='https://treehacks.com'><img src='favicon.ico' width='15px' height='15px'></a></p>";
 
