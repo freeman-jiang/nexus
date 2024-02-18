@@ -6,6 +6,10 @@
     "watchify": "^4.0.0"
   },
   "scripts": {
-    "start": "watchify index.js -o bundle.js"
+    "start": "browserify index.js -o bundle.js",
+    "dev": "watchify index.js -o bundle.js"
+  },
+  "dependencies": {
+    "browserify": "^17.0.0"
   }
 }
