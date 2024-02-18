@@ -1,7 +1,7 @@
-const NODE_COLOR = 0x4fb389;
+const NODE_COLOR = 0x059669;
 const NODE_SIZE = 15;
 const NODE_HOVER_COLOR = 0xffe213;
-const NODE_CONNECTION_COLOR = 0xff0000;
+const NODE_CONNECTION_COLOR = 0xe33f22;
 const LINK_START_COLOR = 0x732196;
 const LINK_END_COLOR = 0x5f5858;
 const LINK_CONNECTION_START_COLOR = 0xffffff;
@@ -11,7 +11,7 @@ const SPRING_COEFF = 0.00111;
 const GRAVITY = -42;
 const THETA = 0.8;
 const DRAG_COEFF = 0.154;
-const TIME_STEP = 1;
+const TIME_STEP = 4;
 
 var createSettingsView = require("config.pixel");
 var query = require("query-string").parse(window.location.search.substring(1));

@@ -13,6 +13,9 @@ print(collection)
 
 # Define the model for the nested "data" part
 
+N_RESULTS = 50
+DISTANCE_THRESHOLD = 7
+
 
 class NodeData(BaseModel):
     name: str
@@ -53,7 +56,7 @@ for i, embedding in enumerate(results["embeddings"]):
     self_major = results["metadatas"][i]["major"] if "major" in results["metadatas"][i] else ""
 
     query = collection.query(
-        n_results=50,
+        n_results=N_RESULTS,
         query_embeddings=[embedding],
         include=["metadatas", "distances"],
         where={
@@ -86,8 +89,7 @@ for i, embedding in enumerate(results["embeddings"]):
     nodes.append(new_node)
 
     for i, distance in enumerate(distances):
-        # Append only if the distance is less than 8
-        if distance < 8:
+        if distance < DISTANCE_THRESHOLD:
             links.append(
                 Link(
                     source=source_id,
