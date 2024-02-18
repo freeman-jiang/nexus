@@ -11,13 +11,17 @@ const SPRING_COEFF = 0.00111;
 const GRAVITY = -42;
 const THETA = 0.8;
 const DRAG_COEFF = 0.154;
-const TIME_STEP = 4;
+const TIME_STEP = 3;
 
 var createSettingsView = require("config.pixel");
 var query = require("query-string").parse(window.location.search.substring(1));
 var graph = getGraphFromQueryString(query);
 var renderGraph = require("ngraph.pixel");
 var addCurrentNodeSettings = require("./nodeSettings.js");
+var THREE = require("three");
+var createLayout = require('pixel.layout');
+
+const layout = createLayout(graph);
 
 var renderer = renderGraph(graph, {
   node: () => {
@@ -216,6 +220,168 @@ function rightFooter() {
     "<p>Made with love at TreeHacks&nbsp; <a target='_blank' rel='noopener noreferrer' href='https://treehacks.com'><img src='favicon.ico' width='15px' height='15px'></a></p>";
   document.body.appendChild(footer);
 }
+
+function searchByNameOrSchool(nodes, query) {
+  const resultIds = nodes
+    .filter((node) => {
+      const nameMatch = node.data.name
+        .toLowerCase()
+        .includes(query.toLowerCase());
+      const schoolMatch = node.data.school
+        .toLowerCase()
+        .includes(query.toLowerCase());
+      //   const interestMatch = node.data.interests
+      //     .toLowerCase()
+      //     .includes(query.toLowerCase());
+      return nameMatch || schoolMatch;
+    })
+    .map((node) => node.id);
+
+  return resultIds;
+}
+
+function updateNodePosition(nodeId) {
+  // Example function to get the most up-to-date position of a node
+  var nodeUI = renderer.getNode(nodeId);
+  if (!nodeUI) return null; // Node not found
+
+  // Assuming 'layout' is your layout engine that has the latest node positions
+  var updatedPosition = layout.getNodePosition(nodeId);
+
+  // Update the nodeUI's position if necessary
+  // This step depends on whether your rendering library allows direct position updates
+  nodeUI.position.x = updatedPosition.x;
+  nodeUI.position.y = updatedPosition.y;
+  nodeUI.position.z = updatedPosition.z; // If your layout is 3D
+
+  return updatedPosition;
+}
+
+function focusOnNode(nodeId) {
+  var position = updateNodePosition(nodeId);
+  if (position) {
+    flyTo(renderer.camera(), position, 1);
+  }
+}
+
+function showSearchBar() {
+  if (document.getElementById("searchBarContainer")) {
+    document.getElementById("searchBarContainer").remove();
+  }
+
+  const json = require("../graphData.json");
+  var nodes = json.nodes;
+
+  var searchBarContainer = document.createElement("div");
+  searchBarContainer.id = "searchBarContainer";
+  searchBarContainer.style.position = "absolute";
+  searchBarContainer.style.top = "20px";
+  searchBarContainer.style.right = "20px";
+  searchBarContainer.style.background = "rgba(255, 255, 255, 0.2)";
+  searchBarContainer.style.borderRadius = "12px";
+  searchBarContainer.style.border = "1px solid rgba(255, 255, 255, 0.18)";
+  searchBarContainer.style.backdropFilter = "blur(5px)";
+  searchBarContainer.style.padding = "20px";
+  searchBarContainer.style.width = "300px";
+  searchBarContainer.style.boxSizing = "border-box";
+  searchBarContainer.style.fontFamily = "'Lucida Grande', sans-serif";
+  searchBarContainer.style.display = "flex";
+  searchBarContainer.style.flexDirection = "column";
+  searchBarContainer.style.gap = "10px";
+
+  var input = document.createElement("input");
+  input.style.padding = "10px";
+  input.style.borderRadius = "8px";
+  input.style.border = "none";
+  input.style.background = "rgba(255, 255, 255, 0.2)";
+  input.style.borderRadius = "12px";
+  input.style.border = "1px solid rgba(255, 255, 255, 0.18)";
+  input.style.backdropFilter = "blur(5px)";
+
+  var button = document.createElement("button");
+  button.textContent = "Search";
+  button.style.padding = "10px";
+  button.style.borderRadius = "8px";
+  button.style.border = "none";
+  button.style.cursor = "pointer";
+  button.style.background = "rgba(255, 255, 255, 0.4)";
+
+  var resultsContainer = document.createElement("div");
+  resultsContainer.id = "resultsContainer";
+  resultsContainer.style.maxHeight = "150px";
+  resultsContainer.style.overflowY = "auto";
+  resultsContainer.style.marginTop = "10px";
+  resultsContainer.style.display = "flex";
+  resultsContainer.style.flexDirection = "column";
+  resultsContainer.style.gap = "5px";
+  resultsContainer.style.color = "white";
+
+  searchBarContainer.appendChild(input);
+  searchBarContainer.appendChild(button);
+  searchBarContainer.appendChild(resultsContainer);
+
+  document.body.appendChild(searchBarContainer);
+
+  button.addEventListener("click", function () {
+    resultsContainer.innerHTML = "";
+  
+    var query = input.value ? input.value : "Krish";
+    var matchingIndexes = searchByNameOrSchool(nodes, query);
+  
+    matchingIndexes.forEach((index) => {
+      var node = nodes.find((node) => node.id === index);
+      if (node) {
+        var result = document.createElement("div");
+        result.innerHTML = `<strong>${node.data.name}</strong><br>${node.data.interests}`;
+        resultsContainer.appendChild(result);
+  
+        result.addEventListener("click", function () {
+          var nodePosition = layout.getNodePosition ? layout.getNodePosition(node.id) : { x: 0, y: 0, z: 0 };
+          focusOnNode(node.id);
+          showNodeDetails(node);
+          console.log(renderer.camera());
+          console.log(nodePosition);
+        });
+      }
+    });
+  
+    if (matchingIndexes.length === 0) {
+      resultsContainer.innerHTML = "<div>No results found</div>";
+    }
+  });  
+}
+
+function intersect(from, to, r) {
+  var dx = from.x - to.x;
+  var dy = from.y - to.y;
+  var dz = from.z - to.z;
+  var r1 = Math.sqrt(dx * dx + dy * dy + dz * dz);
+  var teta = Math.acos(dz / r1);
+  var phi = Math.atan2(dy, dx);
+
+  return {
+    x: r * Math.sin(teta) * Math.cos(phi) + to.x,
+    y: r * Math.sin(teta) * Math.sin(phi) + to.y,
+    z: r * Math.cos(teta) + to.z,
+  };
+}
+function flyTo(camera, targetPosition, distance) {
+  // Assuming 'distance' is a small value to adjust the camera's position slightly away from the target
+
+  // Calculate a direction vector from the camera to the target position
+  var direction = new THREE.Vector3().subVectors(targetPosition, camera.position).normalize();
+
+  // Calculate a new position for the camera along the direction vector, using the specified distance
+  var newPosition = new THREE.Vector3().addVectors(targetPosition, direction.multiplyScalar(-distance));
+  renderer.stable(true);
+  // Set the camera to the new position
+  camera.position.set(newPosition.x, newPosition.y, newPosition.z);
+
+  // Make the camera look at the target position
+  camera.lookAt(targetPosition);
+}
+
+showSearchBar();
 
 showInitialNodePanel();
 leftFooter();
