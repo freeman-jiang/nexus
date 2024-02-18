@@ -1,3 +1,28 @@
+const NODE_COLOR = 0x4fb389;
+const NODE_SIZE = 15;
+const LINK_START_COLOR = 0x732196;
+const LINK_END_COLOR = 0x5f5858;
+const SPRING_LENGTH = 110;
+const SPRING_COEFF = 0.00111;
+const GRAVITY = -42;
+const THETA = 0.8;
+const DRAG_COEFF = 0.154;
+const TIME_STEP = 1;
+
+function createNodeUI() {
+  return {
+    color: NODE_COLOR,
+    size: NODE_SIZE,
+  };
+}
+
+function createLinkUI() {
+  return {
+    fromColor: LINK_START_COLOR,
+    toColor: LINK_END_COLOR,
+  };
+}
+
 var createSettingsView = require("config.pixel");
 var query = require("query-string").parse(window.location.search.substring(1));
 var graph = getGraphFromQueryString(query);
@@ -6,7 +31,18 @@ var addCurrentNodeSettings = require("./nodeSettings.js");
 
 var renderer = renderGraph(graph, {
   node: createNodeUI,
+  link: createLinkUI,
 });
+
+var simulator = renderer.layout().simulator;
+simulator.springLength(SPRING_LENGTH);
+simulator.springCoeff(SPRING_COEFF);
+simulator.gravity(GRAVITY);
+simulator.theta(THETA);
+simulator.dragCoeff(DRAG_COEFF);
+simulator.timeStep(TIME_STEP);
+// renderer.focus();
+
 var settingsView = createSettingsView(renderer);
 var gui = settingsView.gui();
 
@@ -15,7 +51,7 @@ var nodeSettings = addCurrentNodeSettings(gui, renderer);
 renderer.on("nodehover", showNodeDetails);
 
 function showNodeDetails(node) {
-  nodeSettings.setUI(nodeUI);
+  nodeSettings.setUI(node);
   if (!node) return;
 
   graph.forEachNode(function (node) {
@@ -62,13 +98,6 @@ function populateGraph() {
   });
 
   return g;
-}
-
-function createNodeUI(node) {
-  return {
-    color: 0x4fb389,
-    size: 20,
-  };
 }
 
 function showNodePanel(node) {
