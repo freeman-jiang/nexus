@@ -5,7 +5,7 @@ const NODE_CONNECTION_COLOR = 0xe37622;
 const LINK_FROM_COLOR = 0x732196;
 const LINK_TO_COLOR = 0x82a8f5;
 const LINK_CONNECTION_FROM_COLOR = 0xffffff;
-const LINK_CONNECTION_TO_COLOR = 0x333333;
+const LINK_CONNECTION_TO_COLOR = 0xffe213;
 const SPRING_LENGTH = 110;
 const SPRING_COEFF = 0.00111;
 const GRAVITY = -42;
@@ -243,7 +243,6 @@ function rightFooter() {
   document.body.appendChild(footer);
 }
 
-
 function searchByNameOrSchool(nodes, query) {
   const resultIds = nodes
     .filter((node) => {
@@ -344,19 +343,21 @@ function showSearchBar() {
 
   button.addEventListener("click", function () {
     resultsContainer.innerHTML = "";
-  
+
     var query = input.value ? input.value : "Matthew";
     var matchingIndexes = searchByNameOrSchool(nodes, query);
-  
+
     matchingIndexes.forEach((index) => {
       var node = nodes.find((node) => node.id === index);
       if (node) {
         var result = document.createElement("div");
         result.innerHTML = `<strong>${node.data.name}</strong><br>${node.data.school}<br>`;
         resultsContainer.appendChild(result);
-  
+
         result.addEventListener("click", function () {
-          var nodePosition = layout.getNodePosition ? layout.getNodePosition(node.id) : { x: 0, y: 0, z: 0 };
+          var nodePosition = layout.getNodePosition
+            ? layout.getNodePosition(node.id)
+            : { x: 0, y: 0, z: 0 };
           focusOnNode(node.id);
           showNodeDetails(node);
           console.log(renderer.camera());
@@ -364,11 +365,11 @@ function showSearchBar() {
         });
       }
     });
-  
+
     if (matchingIndexes.length === 0) {
       resultsContainer.innerHTML = "<div>No results found</div>";
     }
-  });  
+  });
 }
 
 function intersect(from, to, r) {
@@ -385,7 +386,6 @@ function intersect(from, to, r) {
     z: r * Math.cos(teta) + to.z,
   };
 }
-
 
 function flyTo(camera, to, radius) {
   // if (!to || to.x === undefined || to.y === undefined || to.z === undefined) {
@@ -410,7 +410,6 @@ function flyTo(camera, to, radius) {
   camera.position.set(0, 0, 0);
   // camera.lookAt(new THREE.Vector3(to.x, to.y, to.z));
 }
-
 
 showSearchBar();
 
