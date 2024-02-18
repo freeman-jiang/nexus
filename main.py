@@ -1,10 +1,21 @@
 
 import json
+import os
 import time
 
 import chromadb
+import dotenv
+import together
 
 from extract import extract_person
+
+dotenv.load_dotenv()
+TOGETHER_API_KEY = os.getenv("TOGETHER_API_KEY")
+if not TOGETHER_API_KEY:
+    raise ValueError("TOGETHER_API_KEY is not set")
+
+together.api_key = TOGETHER_API_KEY
+
 
 name = "Ahmed Bakr"
 msg = """Hey everyone! I’m a CS major at Minerva University. I’m looking for a team interested in one of the education and sustainability tracks. I have founded an Ed-Tech Startup which focused on the mental wellness sector and worked with many startups with crazy ideas in the education and sustainability fields so I’m in with any cool ideas in those tracks especially if it’s something with ML/AI.
@@ -19,14 +30,17 @@ chroma_client = chromadb.Client()
 with open("tree-messages.json", "r") as f:
     tree_messages = json.loads(f.read())
 
-for message in tree_messages[:3]:
+for i, message in enumerate(tree_messages[:3]):
     # Extract the name and message from the message
     name = message["Name"]
     msg = message["String"]
     # Extract the person
     person = extract_person(name, msg)
     print(person)
-    time.sleep(1)
+
+    # sleep every 5 iterations
+    if i % 5 == 0:
+        time.sleep(0.5)
 
 #     print(person)
 

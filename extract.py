@@ -5,13 +5,6 @@ import dotenv
 import together
 from pydantic import BaseModel
 
-dotenv.load_dotenv()
-TOGETHER_API_KEY = os.getenv("TOGETHER_API_KEY")
-if not TOGETHER_API_KEY:
-    raise ValueError("TOGETHER_API_KEY is not set")
-
-together.api_key = TOGETHER_API_KEY
-model_list = together.Models.list()
 model = "mistralai/Mixtral-8x7B-Instruct-v0.1"
 
 
