@@ -349,6 +349,17 @@ function showSearchBar() {
   button.style.cursor = "pointer";
   button.style.background = "rgba(0, 0, 0, 0.4)";
 
+  // Modify the input element to add an 'keyup' event listener
+  input.addEventListener("keyup", function (event) {
+    // Check if the pressed key is 'Enter'
+    if (event.key === "Enter") {
+      // Prevent the default action to avoid submitting a form if there is one
+      event.preventDefault();
+      // Trigger the click event on the search button
+      button.click();
+    }
+  });
+
   var resultsContainer = document.createElement("div");
   resultsContainer.id = "resultsContainer";
   resultsContainer.style.maxHeight = "150px";
