@@ -77,16 +77,8 @@ for i, embedding in enumerate(results["embeddings"]):
     nodes.append(new_node)
 
     for i, distance in enumerate(distances):
-        # Always append the nearest neighbor
-        if i == 0:
-            links.append(
-                Link(
-                    source=source_id,
-                    target=nearest_ids[i]
-                )
-            )
-        # Else append only if the distance is less than 8
-        elif distance < 7:
+        # Append only if the distance is less than 8
+        if distance < 8:
             links.append(
                 Link(
                     source=source_id,
