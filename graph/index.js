@@ -89,3 +89,79 @@ function showNodePanel(node) {
   panel.innerHTML += "<p>" + node.data.interests.join(", ") + "</p>";
   document.body.appendChild(panel);
 }
+
+function showInitialNodePanel() {
+  var panel = document.createElement("div");
+  panel.style.position = "absolute";
+  panel.style.top = "0";
+  panel.style.left = "0";
+  panel.style.color = "white";
+  panel.style.padding = "10px";
+  panel.style.marginLeft = "20px";
+  panel.style.width = "300px";
+  panel.style.fontFamily = "Lucida Grande, sans-serif";
+  panel.id = "nodePanel";
+  panel.innerHTML = "<h2>Hover over a node to see more details</h2>";
+  document.body.appendChild(panel);
+}
+
+function leftInstructions() {
+  var footer = document.createElement("div");
+  footer.style.position = "absolute";
+  footer.style.bottom = "0";
+  footer.style.left = "0";
+  footer.style.color = "grey";
+  footer.style.padding = "10px";
+  footer.style.marginLeft = "20px";
+  footer.style.fontFamily = "Lucida Grande, sans-serif";
+  footer.innerHTML =
+    "<p>W: Move forward</p>" +
+    "<p>S: Move backward</p>" +
+    "<p>A: Move left</p>" +
+    "<p>D: Move right</p>" +
+    "<p>R: Move up</p>" +
+    "<p>F: Move down</p>";
+  document.body.appendChild(footer);
+}
+
+function rightInstructions() {
+  var footer = document.createElement("div");
+  footer.style.position = "absolute";
+  footer.style.bottom = "0";
+  footer.style.left = "200px";
+  footer.style.color = "grey";
+  footer.style.padding = "10px";
+  footer.style.marginLeft = "20px";
+  footer.style.fontFamily = "Lucida Grande, sans-serif";
+  footer.innerHTML =
+    "<p>Q: Turn clockwise</p>" +
+    "<p>E: Turn counter-clockwise</p>" +
+    "<p>&uarr;: Rotate up</p>" +
+    "<p>&darr;: Rotate down</p>" +
+    "<p>&larr;: Rotate left</p>" +
+    "<p>&rarr;: Rotate right</p>";
+  document.body.appendChild(footer);
+}
+
+function leftFooter() {
+  leftInstructions();
+  rightInstructions();
+}
+
+function rightFooter() {
+  var footer = document.createElement("div");
+  footer.style.position = "absolute";
+  footer.style.bottom = "0";
+  footer.style.right = "0";
+  footer.style.color = "grey";
+  footer.style.padding = "10px";
+  footer.style.marginRight = "20px";
+  footer.style.fontFamily = "Lucida Grande, sans-serif";
+  footer.innerHTML =
+    "<p>Made with love at TreeHacks&nbsp; <a target='_blank' rel='noopener noreferrer' href='https://treehacks.com'><img src='favicon.ico' width='15px' height='15px'></a></p>";
+  document.body.appendChild(footer);
+}
+
+showInitialNodePanel();
+leftFooter();
+rightFooter();
