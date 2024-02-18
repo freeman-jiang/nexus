@@ -368,3 +368,4 @@ tree-messages.*
 chromadb
 graphData.json
 people.json
+*messages*.json

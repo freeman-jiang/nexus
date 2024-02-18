@@ -46,6 +46,9 @@ with open("tree-messages.json", "r") as f:
 all_extracted: list[Person] = []
 
 for i, message in enumerate(tree_messages):
+    if len(message["String"]) < 150:
+        print(f"Skipping message {i}, too short.")
+        continue
     # Extract the name and message from the message
     name = message["Name"]
     msg = message["String"]
@@ -58,9 +61,9 @@ for i, message in enumerate(tree_messages):
         person = Person(
             background=metadata['background'],
             interests=metadata['interests'],
-            major=metadata['major'] if 'major' in metadata else "unknown",
-            name=metadata['name'] if 'name' in metadata else "unknown",
-            school=metadata['school'] if 'school' in metadata else "unknown"
+            major=metadata['major'] if 'major' in metadata else "",
+            name=metadata['name'] if 'name' in metadata else "",
+            school=metadata['school'] if 'school' in metadata else ""
         )
         all_extracted.append(person)
         print(f"Skipping {ident}, already exists.")

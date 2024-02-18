@@ -27,7 +27,7 @@ Name: "{name}"
 Message: "{msg}"
 Please extract the following properties for this person.
 interface Response {{
-  // If a property is not known, put unknown
+  // If a property is not known, put empty string
   school: string; // eg. University of Michigan, University of Waterloo
   name: string; // eg. John Doe, Jane Smith
   major: string; // eg. Computer Science
