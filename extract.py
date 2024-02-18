@@ -4,6 +4,8 @@ from typing import Optional
 import dotenv
 import together
 from pydantic import BaseModel, ValidationError
+from tenacity import (retry, stop_after_attempt, wait_random,
+                      wait_random_exponential)
 
 model = "mistralai/Mixtral-8x7B-Instruct-v0.1"
 
@@ -17,7 +19,9 @@ class Person(BaseModel):
     major: Optional[str] = None
 
 
+@retry(wait=wait_random_exponential(min=1, max=60), stop=stop_after_attempt(5))
 def extract_person(name: str, msg: str) -> Person:
+    print(f"Extracting person: {name}")
     prompt = f"""Given the following intro message:
 
 Name: "{name}"
