@@ -19,7 +19,7 @@ var graph = getGraphFromQueryString(query);
 var renderGraph = require("ngraph.pixel");
 var addCurrentNodeSettings = require("./nodeSettings.js");
 var THREE = require("three");
-var createLayout = require('pixel.layout');
+var createLayout = require("pixel.layout");
 
 const layout = createLayout(graph);
 
@@ -115,7 +115,9 @@ function populateGraph() {
   var createGraph = require("ngraph.graph");
   var g = createGraph();
 
-  const json = require("../graphData.json");
+  const json = query.treehacks
+    ? require("../treehacksData.json")
+    : require("../graphData.json");
 
   // Extract the "nodes" and "links" from the JSON file
   var nodes = json.nodes;
@@ -234,6 +236,10 @@ function rightFooter() {
   footer.style.fontFamily = "Lucida Grande, sans-serif";
   footer.innerHTML =
     "<p>Made with love at TreeHacks&nbsp; <a target='_blank' rel='noopener noreferrer' href='https://treehacks.com'><img src='favicon.ico' width='15px' height='15px'></a></p>";
+
+  const location = query.treehacks ? "index.html" : "index.html?treehacks=true";
+
+  footer.innerHTML += `<button onclick="window.location.href='${location}'">Toggle graph</button>`;
   document.body.appendChild(footer);
 }
 
@@ -387,10 +393,15 @@ function flyTo(camera, targetPosition, distance) {
   // Assuming 'distance' is a small value to adjust the camera's position slightly away from the target
 
   // Calculate a direction vector from the camera to the target position
-  var direction = new THREE.Vector3().subVectors(targetPosition, camera.position).normalize();
+  var direction = new THREE.Vector3()
+    .subVectors(targetPosition, camera.position)
+    .normalize();
 
   // Calculate a new position for the camera along the direction vector, using the specified distance
-  var newPosition = new THREE.Vector3().addVectors(targetPosition, direction.multiplyScalar(-distance));
+  var newPosition = new THREE.Vector3().addVectors(
+    targetPosition,
+    direction.multiplyScalar(-distance)
+  );
   renderer.stable(true);
   // Set the camera to the new position
   camera.position.set(newPosition.x, newPosition.y, newPosition.z);
