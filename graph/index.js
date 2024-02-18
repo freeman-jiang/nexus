@@ -2,10 +2,10 @@ const NODE_COLOR = 0x059669;
 const NODE_SIZE = 15;
 const NODE_HOVER_COLOR = 0xffe213;
 const NODE_CONNECTION_COLOR = 0xe33f22;
-const LINK_START_COLOR = 0x732196;
-const LINK_END_COLOR = 0x5f5858;
-const LINK_CONNECTION_START_COLOR = 0xffffff;
-const LINK_CONNECTION_END_COLOR = 0x333333;
+const LINK_FROM_COLOR = 0x732196;
+const LINK_TO_COLOR = 0x5f5858;
+const LINK_CONNECTION_FROM_COLOR = 0xffffff;
+const LINK_CONNECTION_TO_COLOR = 0x333333;
 const SPRING_LENGTH = 110;
 const SPRING_COEFF = 0.00111;
 const GRAVITY = -42;
@@ -28,8 +28,8 @@ var renderer = renderGraph(graph, {
   },
   link: () => {
     return {
-      fromColor: LINK_START_COLOR,
-      toColor: LINK_END_COLOR,
+      fromColor: LINK_FROM_COLOR,
+      toColor: LINK_TO_COLOR,
     };
   },
 });
@@ -60,8 +60,8 @@ function showNodeDetails(node) {
   });
   graph.forEachLink(function (link) {
     var linkUI = renderer.getLink(link.id);
-    linkUI.fromColor = LINK_START_COLOR;
-    linkUI.toColor = LINK_END_COLOR;
+    linkUI.fromColor = LINK_FROM_COLOR;
+    linkUI.toColor = LINK_TO_COLOR;
   });
   var nodeUI = renderer.getNode(node.id);
   nodeUI.color = NODE_HOVER_COLOR;
@@ -70,8 +70,8 @@ function showNodeDetails(node) {
     var toNodeUI = renderer.getNode(toNode);
     toNodeUI.color = NODE_CONNECTION_COLOR;
     var linkUI = renderer.getLink(link.id);
-    linkUI.fromColor = LINK_CONNECTION_START_COLOR;
-    linkUI.toColor = LINK_CONNECTION_END_COLOR;
+    linkUI.fromColor = LINK_CONNECTION_FROM_COLOR;
+    linkUI.toColor = LINK_CONNECTION_TO_COLOR;
   });
   showNodePanel(node);
 }
