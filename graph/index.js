@@ -147,7 +147,7 @@ function showNodePanel(node) {
   panel.style.width = "300px";
   panel.style.fontFamily = "Geist, sans-serif";
   panel.style.maxHeight = "65%";
-  panel.style.overflowY = "auto";
+  // panel.style.overflowY = "auto";
   panel.id = "nodePanel";
   panel.innerHTML = "<h1>" + node.data.name + "</h1>";
   panel.innerHTML += "<h2>" + node.data.school + "</h2>";
