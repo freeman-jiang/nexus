@@ -1,12 +1,14 @@
-
 import json
 import os
 import time
+from importlib import metadata
+from typing import Sequence
 
-import chromadb
 import dotenv
 import together
 
+import chromadb
+from chromadb import Documents, EmbeddingFunction, Embeddings
 from extract import extract_person
 
 dotenv.load_dotenv()
@@ -15,32 +17,61 @@ if not TOGETHER_API_KEY:
     raise ValueError("TOGETHER_API_KEY is not set")
 
 together.api_key = TOGETHER_API_KEY
+client = together.Together()
 
 
-name = "Ahmed Bakr"
-msg = """Hey everyone! I’m a CS major at Minerva University. I’m looking for a team interested in one of the education and sustainability tracks. I have founded an Ed-Tech Startup which focused on the mental wellness sector and worked with many startups with crazy ideas in the education and sustainability fields so I’m in with any cool ideas in those tracks especially if it’s something with ML/AI.
-Here’s my LinkedIn to connect too:
-https://www.linkedin.com/in/a7medbakrr?"""
-res = extract_person(name, msg)
+class CustomTogetherEmbeddingFn(EmbeddingFunction):
+    def __call__(self, input: Documents) -> Embeddings:
+        return get_embeddings(input)
 
 
-chroma_client = chromadb.Client()
+def get_embeddings(texts: list[str]) -> list[Sequence[float]]:
+    texts = [text.replace("\n", " ") for text in texts]
+    outputs = client.embeddings.create(
+        input=texts, model="togethercomputer/m2-bert-80M-2k-retrieval")
+    return [outputs.data[i].embedding for i in range(len(texts))]
+
+
+chroma_client = chromadb.PersistentClient(path="chromadb")
+
+
+collection = chroma_client.get_or_create_collection(
+    name="background_embeddings", embedding_function=CustomTogetherEmbeddingFn())
+
 
 # Load a JSON array from tree-messages.json
 with open("tree-messages.json", "r") as f:
     tree_messages = json.loads(f.read())
 
-for i, message in enumerate(tree_messages[:3]):
+
+for i, message in enumerate(tree_messages):
     # Extract the name and message from the message
     name = message["Name"]
     msg = message["String"]
+
+    # If person already exists in the database, skip
+    ident = f"{name}_{i}"
+    existing = collection.get(ids=[ident])
+    if existing["ids"]:
+        print(f"Skipping {ident}, already exists.")
+        continue
+
     # Extract the person
     person = extract_person(name, msg)
-    print(person)
 
     # sleep every 5 iterations
-    if i % 5 == 0:
-        time.sleep(0.5)
+    time.sleep(1.1)
+
+    collection.upsert(
+        ids=[ident],
+        documents=[person.background],
+        metadatas={"name": name}
+    )
+
+    print(f"\nEmbedded person: {person.name} ({person.school})",)
+
+    time.sleep(1.1)
+
 
 #     print(person)
 

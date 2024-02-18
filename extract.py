@@ -3,7 +3,7 @@ from typing import Optional
 
 import dotenv
 import together
-from pydantic import BaseModel
+from pydantic import BaseModel, ValidationError
 
 model = "mistralai/Mixtral-8x7B-Instruct-v0.1"
 
@@ -36,19 +36,26 @@ interface Response {{
 Please return your answer in the form of a JSON object conforming to the Typescript interface definition ONLY. DO NOT change the format of the JSON object. DO NOT include any other information in your response. Your response:
 """
 
-    generation = together.Complete.create(
-        max_tokens=256,
-        stop=["\n\n"],
-        temperature=0.5,
-        top_k=10,
-        prompt=prompt,
-        model=model
-    )
+    for _ in range(5):  # Retry up to 5 times
+        try:
+            generation = together.Complete.create(
+                max_tokens=256,
+                stop=["\n\n"],
+                temperature=0.5,
+                top_k=10,
+                prompt=prompt,
+                model=model
+            )
 
-    raw_json = generation['output']['choices'][0]['text']
-    # Extract the {} from the string
-    raw_json = raw_json[raw_json.find("{"): raw_json.rfind("}") + 1]
+            raw_json = generation['output']['choices'][0]['text']
+            # Extract the {} from the string
+            raw_json = raw_json[raw_json.find("{"): raw_json.rfind("}") + 1]
 
-    person = Person.model_validate_json(raw_json)
-    person.name = name
-    return person
+            person = Person.model_validate_json(raw_json)
+            person.name = name
+            return person
+        except ValidationError:
+            print(f"Validation error, retrying generation: {raw_json}")
+            continue  # If validation error occurs, retry the generation
+
+    raise Exception("Failed to generate valid person after 3 attempts")
