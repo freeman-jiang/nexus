@@ -47,8 +47,11 @@ function populateGraph() {
   var createGraph = require("ngraph.graph");
   var g = createGraph();
 
-  var nodes = require("./data.js").nodes;
-  var links = require("./data.js").links;
+  const json = require("../graphData.json");
+
+  // Extract the "nodes" and "links" from the JSON file
+  var nodes = json.nodes;
+  var links = json.links;
 
   nodes.forEach(function (node) {
     g.addNode(node.id, node.data);
