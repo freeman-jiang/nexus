@@ -11,7 +11,7 @@ const SPRING_COEFF = 0.00111;
 const GRAVITY = -42;
 const THETA = 0.8;
 const DRAG_COEFF = 0.154;
-const TIME_STEP = 4;
+const TIME_STEP = 2;
 
 var createSettingsView = require("config.pixel");
 var query = require("query-string").parse(window.location.search.substring(1));
