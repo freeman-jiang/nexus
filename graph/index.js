@@ -259,7 +259,7 @@ function rightFooter() {
 
   const location = query.treehacks ? "index.html" : "index.html?treehacks=true";
 
-  footer.innerHTML += `<button onclick="window.location.href='${location}'" style="color:white;background:#201c1c;font-family:Geist;border:none;padding:12px;cursor:pointer;float:right;">${
+  footer.innerHTML += `<button onclick="window.location.href='${location}'" style="color:white;background:#201c1c;font-family:'Geist';border:none;padding:12px;cursor:pointer;float:right;">${
     query.treehacks ? "See all data" : "See TreeHacks data"
   }</button>`;
   document.body.appendChild(footer);
@@ -274,10 +274,10 @@ function searchByNameOrSchool(nodes, query) {
       const schoolMatch = node.data.school
         .toLowerCase()
         .includes(query.toLowerCase());
-      //   const interestMatch = node.data.interests
-      //     .toLowerCase()
-      //     .includes(query.toLowerCase());
-      return nameMatch || schoolMatch;
+      const interestMatch = node.data.interests
+        .toLowerCase()
+        .includes(query.toLowerCase());
+      return nameMatch || schoolMatch || interestMatch;
     })
     .map((node) => node.id);
 
